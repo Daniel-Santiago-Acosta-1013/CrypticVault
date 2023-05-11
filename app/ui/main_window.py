@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog
+from app.encryption.aes import encrypt, decrypt
+from app.file_handlers.text_file_handler import read_file, write_file
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -25,8 +27,10 @@ class MainWindow(QMainWindow):
         fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
                                                   "All Files (*);;Python Files (*.py)", options=options)
         if fileName:
-            print(fileName)
-            # Aquí podrías llamar a la función de encriptación con el archivo seleccionado
+            data = read_file(fileName)
+            key = "132we1d635we65dw65edw"
+            encrypted_data = encrypt(key, data)
+            write_file(fileName, encrypted_data)
 
     def decrypt_file(self):
         options = QFileDialog.Options()
@@ -34,5 +38,7 @@ class MainWindow(QMainWindow):
         fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
                                                   "All Files (*);;Python Files (*.py)", options=options)
         if fileName:
-            print(fileName)
-            # Aquí podrías llamar a la función de desencriptación con el archivo seleccionado
+            data = read_file(fileName)
+            key = "132we1d635we65dw65edw"
+            decrypted_data = decrypt(key, data)
+            write_file(fileName, decrypted_data)

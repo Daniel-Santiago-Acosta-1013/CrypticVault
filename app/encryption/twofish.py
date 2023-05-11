@@ -1,7 +1,9 @@
-def read_file(path):
-    with open(path, "rb") as file:
-        return file.read()
+from twofish import Twofish
 
-def write_file(path, data):
-    with open(path, "wb") as file:
-        file.write(data)
+def encrypt(key, data):
+    T = Twofish(key)
+    return T.encrypt(data)
+
+def decrypt(key, data):
+    T = Twofish(key)
+    return T.decrypt(data)

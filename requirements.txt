@@ -1,0 +1,3 @@
+pyqt5==5.15.4
+cryptography==3.4.7
+twofish==0.3.0
