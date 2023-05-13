@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Enigma Machine")
 
         # Definir el tamaño de la ventana (ancho, alto)
-        self.resize(800, 600)
+        self.resize(600, 400)
 
         self.tab_widget = QTabWidget()
 
