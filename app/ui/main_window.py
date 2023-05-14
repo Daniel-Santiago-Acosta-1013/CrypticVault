@@ -6,6 +6,8 @@ from app.file_handlers.image_file_handler import read_file as read_image_file, w
 from app.file_handlers.audio_file_handler import read_file as read_audio_file, write_file as write_audio_file
 from app.file_handlers.video_file_handler import read_file as read_video_file, write_file as write_video_file
 from app.ui.dialogs import KeyDialog
+import base64
+import hashlib
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -101,13 +103,26 @@ class MainWindow(QMainWindow):
         return fileName
 
 
+    
     def get_key(self):
-       dialog = KeyDialog()
-       result = dialog.exec()
-       if result == QDialog.Accepted:
-           return dialog.get_key()
-       else:
-           return None
+        dialog = KeyDialog()
+        result = dialog.exec()
+        if result == QDialog.Accepted:
+            # Obtener la clave del diálogo
+            key = dialog.get_key()
+
+            # Codificar la clave en UTF-8
+            key = key.encode('utf-8')
+
+            # Hash the key to get a 32-byte value
+            key = hashlib.sha256(key).digest()
+
+            # Codificar la clave en base64
+            key = base64.urlsafe_b64encode(key)
+
+            return key
+        else:
+            return None
        
 
     def encrypt_text_file(self):
