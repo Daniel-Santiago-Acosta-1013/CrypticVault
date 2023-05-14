@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog,
-                             QLabel, QTabWidget, QTextEdit, QDialog)
+                             QLabel, QTabWidget, QTextEdit, QDialog, QSizePolicy)
 from app.encryption.aes import encrypt, decrypt
 from app.file_handlers.text_file_handler import read_file as read_text_file, write_file as write_text_file
 from app.file_handlers.image_file_handler import read_file as read_image_file, write_file as write_image_file
@@ -9,10 +9,12 @@ from app.ui.dialogs import KeyDialog
 import base64
 import hashlib
 
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Enigma Machine")
+        self.setStyleSheet("background-color: #F0F0F0;")  # color de fondo minimalista
 
         # Definir el tamaño de la ventana (ancho, alto)
         self.resize(600, 400)
@@ -39,62 +41,41 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.tab_widget)
 
-    def text_tab_ui(self):
+    def create_tab_ui(self, encrypt_callback, decrypt_callback, file_type):
         layout = QVBoxLayout()
 
-        self.encrypt_text_button = QPushButton("Encriptar Texto")
-        self.encrypt_text_button.clicked.connect(self.encrypt_text_file)
-        layout.addWidget(self.encrypt_text_button)
+        instructions = QLabel(f"Para {file_type}, selecciona el archivo y luego introduce la clave de encriptación.")
+        instructions.setWordWrap(True)
+        layout.addWidget(instructions)
 
-        self.decrypt_text_button = QPushButton("Desencriptar Texto")
-        self.decrypt_text_button.clicked.connect(self.decrypt_text_file)
-        layout.addWidget(self.decrypt_text_button)
+        encrypt_button = QPushButton(f"Encriptar {file_type}")
+        encrypt_button.clicked.connect(encrypt_callback)
+        layout.addWidget(encrypt_button)
 
+        decrypt_button = QPushButton(f"Desencriptar {file_type}")
+        decrypt_button.clicked.connect(decrypt_callback)
+        layout.addWidget(decrypt_button)
+
+        return layout
+
+    def text_tab_ui(self):
+        layout = self.create_tab_ui(self.encrypt_text_file, self.decrypt_text_file, "Texto")
         self.text_tab.setLayout(layout)
 
-
     def image_tab_ui(self):
-        layout = QVBoxLayout()
-
-        self.encrypt_image_button = QPushButton("Encriptar Imagen")
-        self.encrypt_image_button.clicked.connect(self.encrypt_image_file)
-        layout.addWidget(self.encrypt_image_button)
-
-        self.decrypt_image_button = QPushButton("Desencriptar Imagen")
-        self.decrypt_image_button.clicked.connect(self.decrypt_image_file)
-        layout.addWidget(self.decrypt_image_button)
-
+        layout = self.create_tab_ui(self.encrypt_image_file, self.decrypt_image_file, "Imagen")
         self.image_tab.setLayout(layout)
 
-
     def audio_tab_ui(self):
-        layout = QVBoxLayout()
-
-        self.encrypt_audio_button = QPushButton("Encriptar Audio")
-        self.encrypt_audio_button.clicked.connect(self.encrypt_audio_file)
-        layout.addWidget(self.encrypt_audio_button)
-
-        self.decrypt_audio_button = QPushButton("Desencriptar Audio")
-        self.decrypt_audio_button.clicked.connect(self.decrypt_audio_file)
-        layout.addWidget(self.decrypt_audio_button)
-
+        layout = self.create_tab_ui(self.encrypt_audio_file, self.decrypt_audio_file, "Audio")
         self.audio_tab.setLayout(layout)
 
-
     def video_tab_ui(self):
-        layout = QVBoxLayout()
-
-        self.encrypt_video_button = QPushButton("Encriptar Video")
-        self.encrypt_video_button.clicked.connect(self.encrypt_video_file)
-        layout.addWidget(self.encrypt_video_button)
-
-        self.decrypt_video_button = QPushButton("Desencriptar Video")
-        self.decrypt_video_button.clicked.connect(self.decrypt_video_file)
-        layout.addWidget(self.decrypt_video_button)
-
+        layout = self.create_tab_ui(self.encrypt_video_file, self.decrypt_video_file, "Video")
         self.video_tab.setLayout(layout)
 
-
+    # comienza logica del programa
+    
     def get_file(self, title):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
