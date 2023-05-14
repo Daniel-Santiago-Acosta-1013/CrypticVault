@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog,
                              QLabel, QTabWidget, QTextEdit, QDialog, QSizePolicy)
 from app.encryption.aes import encrypt, decrypt
@@ -45,6 +46,7 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
 
         instructions = QLabel(f"Para {file_type}, selecciona el archivo y luego introduce la clave de encriptación.")
+        instructions.setAlignment(Qt.AlignCenter)
         instructions.setWordWrap(True)
         layout.addWidget(instructions)
 
