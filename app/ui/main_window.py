@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog,
-                             QLabel, QTabWidget, QTextEdit, QDialog, QSizePolicy)
+                             QLabel, QTabWidget, QTextEdit, QDialog, QSizePolicy, QErrorMessage)
 from app.encryption.aes import encrypt, decrypt
 from app.file_handlers.text_file_handler import read_file as read_text_file, write_file as write_text_file
 from app.file_handlers.image_file_handler import read_file as read_image_file, write_file as write_image_file
@@ -106,81 +106,82 @@ class MainWindow(QMainWindow):
             return key
         else:
             return None
+        
+
+    def validate_file(self, filename, valid_extensions):
+        if not filename.endswith(valid_extensions):
+            error_dialog = QErrorMessage(self)
+            error_dialog.showMessage('Formato de archivo no válido.')
+            return False
+        return True 
        
 
     def encrypt_text_file(self):
         fileName = self.get_file("Seleccione el archivo de texto a encriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.txt')):
             data = read_text_file(fileName)
             key = self.get_key()
             if key:
                 encrypted_data = encrypt(key, data)
                 write_text_file(fileName, encrypted_data)
 
-
     def decrypt_text_file(self):
         fileName = self.get_file("Seleccione el archivo de texto a desencriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.txt')):
             data = read_text_file(fileName)
             key = self.get_key()
             if key:
                 decrypted_data = decrypt(key, data)
                 write_text_file(fileName, decrypted_data)
 
-
     def encrypt_image_file(self):
         fileName = self.get_file("Seleccione la imagen a encriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.jpg', '.png', '.bmp')):
             data = read_image_file(fileName)
             key = self.get_key()
             if key:
                 encrypted_data = encrypt(key, data)
                 write_image_file(fileName, encrypted_data)
 
-
     def decrypt_image_file(self):
         fileName = self.get_file("Seleccione la imagen a desencriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.jpg', '.png', '.bmp')):
             data = read_image_file(fileName)
             key = self.get_key()
             if key:
                 decrypted_data = decrypt(key, data)
                 write_image_file(fileName, decrypted_data)
 
-
     def encrypt_audio_file(self):
         fileName = self.get_file("Seleccione el archivo de audio a encriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.mp3', '.wav')):
             data = read_audio_file(fileName)
             key = self.get_key()
             if key:
                 encrypted_data = encrypt(key, data)
                 write_audio_file(fileName, encrypted_data)
 
-
     def decrypt_audio_file(self):
         fileName = self.get_file("Seleccione el archivo de audio a desencriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.mp3', '.wav')):
             data = read_audio_file(fileName)
             key = self.get_key()
             if key:
                 decrypted_data = decrypt(key, data)
                 write_audio_file(fileName, decrypted_data)
 
-
     def encrypt_video_file(self):
         fileName = self.get_file("Seleccione el archivo de video a encriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.mp4', '.avi', '.mkv')):
             data = read_video_file(fileName)
             key = self.get_key()
             if key:
                 encrypted_data = encrypt(key, data)
                 write_video_file(fileName, encrypted_data)
 
-
     def decrypt_video_file(self):
         fileName = self.get_file("Seleccione el archivo de video a desencriptar")
-        if fileName:
+        if fileName and self.validate_file(fileName, ('.mp4', '.avi', '.mkv')):
             data = read_video_file(fileName)
             key = self.get_key()
             if key:
