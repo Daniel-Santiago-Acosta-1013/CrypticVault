@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog,
-                             QLabel, QTabWidget, QTextEdit, QDialog, QSizePolicy, QErrorMessage)
+                             QLabel, QTabWidget, QDialog, QErrorMessage)
 from app.encryption.aes import encrypt, decrypt
 from app.file_handlers.text_file_handler import read_file as read_text_file, write_file as write_text_file
 from app.file_handlers.image_file_handler import read_file as read_image_file, write_file as write_image_file
